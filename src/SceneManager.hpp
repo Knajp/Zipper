@@ -2,9 +2,11 @@
 #include "Utility/structs.hpp"
 #include "Utility/RenderUtil.hpp"
 #include "Graphics/Renderer.hpp"
+#include <memory>
 #include <vector>
 #include <vulkan/vulkan.h>
 #include <tinyobjloader/tiny_obj_loader.h>
+#include "Nodes/Object.hpp"
 
 namespace ke
 {
@@ -123,26 +125,6 @@ namespace ke
 
     };
     }  
-    class SceneObject
-    {
-    public:
-        SceneObject() = default;
-
-        void Draw() const;
-        void setTexture(std::string textureName);
-        void loadMesh(util::Mesh& mesh);
-
-        SceneObject(SceneObject&& other) noexcept
-        : mMesh(std::move(other.mMesh)),
-          mTextureIndex(other.mTextureIndex)
-        {
-        }
-        ~SceneObject() = default;
-    private:
-        util::Mesh mMesh;
-
-        uint32_t mTextureIndex = -1;
-    };
     class SceneManager
     {
     public:
@@ -163,8 +145,13 @@ namespace ke
 
         const VkViewport& getViewport() const;
         const VkRect2D& getScissor() const;
+                ke::SceneManager& sceneManager = ke::SceneManager::getInstance();
+                const nodes::RootObject* sceneRoot = sceneManager.getRootObject();
+        const nodes::RootObject* const getRootObject() const
+        {
+            return mRootObject.get();
+        }
 
-        void addObjectToScene(std::unique_ptr<SceneObject> object);
     private:
 
         SceneManager() = default;
@@ -174,6 +161,6 @@ namespace ke
 
         bool isFocused = true;
         
-        std::vector<std::unique_ptr<SceneObject>> mSceneObjects;
+        std::unique_ptr<nodes::RootObject> mRootObject;
     };
 }

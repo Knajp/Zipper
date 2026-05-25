@@ -40,13 +40,13 @@ workspace "NewEngine"
     filter {}
     
     filter "toolset:clang"
-        links "libc++"
+        links "c++"
     filter {}
 
 project "NewEngine"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++20"
     targetdir "bin/%{cfg.buildcfg}"
 
     files { "**.h", "**.c", "**.cpp", "**.hpp" }
@@ -65,3 +65,5 @@ project "NewEngine"
     filter "configurations:Release"
         defines { "NDEBUG" }
         optimize "On"
+
+        

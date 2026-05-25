@@ -7,6 +7,9 @@
 #include <glm/glm.hpp>
 #include <functional>
 #include "../Graphics/TextUtilities.hpp"
+#include "../Nodes/Object.hpp"
+#include "structs.hpp"
+#include "../SceneManager.hpp"
 
 namespace ke
 {
@@ -14,7 +17,7 @@ namespace ke
     {
         enum class UIType
         {
-            TypeFrame, TypeButton, TypeInputField
+            TypeFrame, TypeButton, TypeInputField, TypeExplorer
         };
         #define GUI_TYPE(type) static UIType getStaticType() {return UIType::type;} \
             UIType getType() const override {return getStaticType();}
@@ -58,6 +61,44 @@ namespace ke
 
             std::string buttonID;
             GUI_TYPE(TypeButton)
+        };
+
+        struct ExpEntry
+        {
+            ExpEntry(std::string _text, int _depth)
+                : depth(_depth) {}
+            Graphics::Text::TextInstance text;
+            int depth;
+            bool collapsed = false;
+        };
+
+        class Explorer : public Element
+        {
+        public:
+            Explorer() = default;
+            Explorer(float _x, float _y, float _w, float _h, glm::vec3 _color)
+                : Element(_x, _y, _w, _h, _color)
+            {
+                Graphics::Renderer& rend = Graphics::Renderer::getInstance();
+                mVertexBuffer.setDevice(rend.getDevice());
+                mIndexBuffer.setDevice(rend.getDevice());
+
+                updateExplorerEntries();
+                reconstructExplorerVertices();
+            }
+
+            void updateExplorerEntries();
+            void reconstructExplorerVertices();
+
+            std::unordered_map<uint64_t, ExpEntry> mEntries;
+            std::vector<uint64_t> mVisibleEntries;
+
+        private:
+            std::vector<util::str::Vertex2P3C2T> mVertices;
+            std::vector<uint32_t> mIndices;
+
+            util::Buffer mVertexBuffer;
+            util::Buffer mIndexBuffer;
         };
 
         enum InputType
