@@ -1,4 +1,5 @@
 #include "Application.hpp"
+#include "Nodes/PhysicsObject.hpp"
 
 ke::Core::Application& ke::Core::Application::getInstance()
 {
@@ -61,6 +62,7 @@ void ke::Core::Application::run()
     uint16_t musicIndex = mAudioManager.createAudio("src/Sounds/music.mp3", AL_TRUE, 1.0f, 1.0f, "music");
     mAudioManager.PlayAudio(musicIndex);
 
+    const nodes::RootObject* rootObject = mSceneManager.getRawRootObject();
 
     while (!mWindow->shouldClose())
     {

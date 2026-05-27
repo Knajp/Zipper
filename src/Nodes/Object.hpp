@@ -21,7 +21,7 @@ namespace ke
 
             std::string name;
             
-                        template<typename T, typename... Args>
+            template<typename T, typename... Args>
             T* createChild(Args&&... args)
             {
                 auto child = std::make_unique<T>(std::forward<Args>(args)...);

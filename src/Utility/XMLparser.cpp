@@ -218,3 +218,10 @@ void ke::gui::Explorer::reconstructExplorerVertices()
     rend.createIndexBuffer(mIndices, mIndexBuffer.buffer, mIndexBuffer.bufferMemory);
     
 }
+
+void ke::gui::Explorer::DrawGeometry() const
+{
+    ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
+
+    rend.drawBuffersIndexed(mVertexBuffer, mIndexBuffer, static_cast<uint32_t>(mIndices.size()));
+}

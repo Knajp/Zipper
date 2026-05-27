@@ -6,7 +6,7 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 #include <tinyobjloader/tiny_obj_loader.h>
-#include "Nodes/Object.hpp"
+#include "Nodes/NodeInclude.hpp"
 
 namespace ke
 {
@@ -145,12 +145,13 @@ namespace ke
 
         const VkViewport& getViewport() const;
         const VkRect2D& getScissor() const;
-                ke::SceneManager& sceneManager = ke::SceneManager::getInstance();
-                const nodes::RootObject* sceneRoot = sceneManager.getRootObject();
+        ke::SceneManager& sceneManager = ke::SceneManager::getInstance();
+        const nodes::RootObject* sceneRoot = sceneManager.getRootObject();
         const nodes::RootObject* const getRootObject() const
         {
             return mRootObject.get();
         }
+
 
     private:
 
