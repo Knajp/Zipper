@@ -7,6 +7,14 @@ namespace ke
 {
     namespace nodes
     {
+        enum class ObjectType
+        {
+            ROOT, SCENE, MAX_ENUM
+        };
+
+        #define OBJECT_TYPE(type) static ObjectType getStaticType() {return ObjectType::type;} \
+            ObjectType getType() const override {return getStaticType();}
+
         // DEFAULT SCENE OBJECT, USED FOR GLOBAL STORAGE
         class DefaultObject
         {
@@ -54,6 +62,8 @@ namespace ke
                 return nodes;
             }
 
+            virtual ObjectType getType() const = 0;
+
         protected:
             DefaultObject(uint8_t depth)
             {
@@ -70,21 +80,11 @@ namespace ke
             DefaultObject* mParent = nullptr;
         };
 
-
-        enum class SysObjectType
-        {
-            ROOT, SCENE, MAX_ENUM
-        };
-
-        #define SYSTEMOBJECT_TYPE(type) static SysObjectType getStaticType() {return SysObjectType::type;} \
-            SysObjectType getType() const override {return getStaticType();}
-
         // SYSTEM OBJECT, ONLY TO BE USED BY THE APP, NEVER BY THE USER
         class SystemObject : public DefaultObject
         {
         public:
             virtual ~SystemObject() = default;
-            virtual SysObjectType getType() const = 0;
         protected:
             SystemObject(uint8_t depth)
                 : DefaultObject(depth) {}
@@ -98,7 +98,7 @@ namespace ke
         public:
             static RootObject& getInstance() {static RootObject instance; return instance;}
             
-            SYSTEMOBJECT_TYPE(ROOT)
+            OBJECT_TYPE(ROOT)
 
         private:
             RootObject()
@@ -107,16 +107,26 @@ namespace ke
             std::vector<std::unique_ptr<SystemObject>> mChildren;
         };
 
+        class ISceneObject : public SystemObject
+        {
+        public:
+            virtual ~ISceneObject() = default;
+            OBJECT_TYPE(SCENE)
+        protected:
+            ISceneObject(uint8_t depth)
+                : SystemObject(depth) {}
+        };
+
         template<typename T>
-        class SceneObject : public SystemObject
+        class SceneObject : public ISceneObject
         {
         public:
             static SceneObject& getInstance() {static SceneObject instance; return instance;}
-            SYSTEMOBJECT_TYPE(SCENE)
+            OBJECT_TYPE(SCENE)
 
         private:
             SceneObject(uint8_t depth)
-                : SystemObject(depth) {}
+                : ISceneObject(depth) {}
 
             std::vector<std::unique_ptr<T>> mChildren;
         };

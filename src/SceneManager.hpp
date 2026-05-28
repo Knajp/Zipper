@@ -1,8 +1,10 @@
 #pragma once
+#include "Nodes/Object.hpp"
 #include "Utility/structs.hpp"
 #include "Utility/RenderUtil.hpp"
 #include "Graphics/Renderer.hpp"
 #include <memory>
+#include <variant>
 #include <vector>
 #include <vulkan/vulkan.h>
 #include <tinyobjloader/tiny_obj_loader.h>
@@ -146,10 +148,16 @@ namespace ke
         const VkViewport& getViewport() const;
         const VkRect2D& getScissor() const;
         ke::SceneManager& sceneManager = ke::SceneManager::getInstance();
-        const nodes::RootObject* sceneRoot = sceneManager.getRootObject();
-        const nodes::RootObject* const getRootObject() const
+        const nodes::ISceneObject* const getSceneObject() const
         {
-            return mRootObject.get();
+            if(!pSceneObject || pSceneObject == nullptr)
+            {
+                for(auto& child : mRootObject->getChildren())
+                    if(child->getType() == nodes::ISceneObject::getStaticType())
+                        pSceneObject = dynamic_cast<nodes::ISceneObject*>(child.get());
+            }
+
+            return pSceneObject;
         }
 
 
@@ -163,5 +171,6 @@ namespace ke
         bool isFocused = true;
         
         std::unique_ptr<nodes::RootObject> mRootObject;
+        mutable nodes::ISceneObject* pSceneObject = nullptr;
     };
 }
