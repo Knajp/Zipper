@@ -4,9 +4,12 @@
 
 namespace ke::nodes
 {
-    class Rect2D : Node2D
+    class Rect2D : public Node2D
     {
     public:
+
+        OBJECT_TYPE(RECT2D)
+        
         Rect2D(uint8_t depth, glm::ivec2 pos, glm::ivec2 ext)
             : Node2D(depth), position(pos), extent(ext) {}
 

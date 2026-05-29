@@ -9,7 +9,7 @@ namespace ke
     {
         enum class ObjectType
         {
-            ROOT, SCENE, MAX_ENUM
+            ROOT, SCENE, RECT2D, CIRCLE, MAX_ENUM
         };
 
         #define OBJECT_TYPE(type) static ObjectType getStaticType() {return ObjectType::type;} \
@@ -26,6 +26,16 @@ namespace ke
             {
                 return mObjectID == other.mObjectID;
             }
+            const DefaultObject* operator[](std::string childName)
+            {
+                for(auto& child : mChildren)
+                {
+                    if(child->name == childName)
+                        return child.get();
+                }
+
+                return nullptr;
+            }
 
             std::string name;
             
@@ -35,7 +45,7 @@ namespace ke
                 auto child = std::make_unique<T>(std::forward<Args>(args)...);
                 child->mParent = this;
 
-                T* raw = child->get();
+                T* raw = child.get();
                 mChildren.push_back(std::move(child));
 
 
@@ -71,13 +81,15 @@ namespace ke
                 mObjectID = id++;
 
                 mObjectDepth = depth;
+
             }
+            DefaultObject* mParent = nullptr;
+
         private:
             uint64_t mObjectID;
             uint8_t mObjectDepth;
 
             std::vector<std::unique_ptr<DefaultObject>> mChildren;
-            DefaultObject* mParent = nullptr;
         };
 
         // SYSTEM OBJECT, ONLY TO BE USED BY THE APP, NEVER BY THE USER

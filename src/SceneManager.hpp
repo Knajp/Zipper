@@ -135,7 +135,7 @@ namespace ke
             static SceneManager instance;
             return instance;
         }
-
+        
 
         void init(glm::ivec2 pos, glm::ivec2 extent, int windowHeight);
         void drawScene() const;
@@ -148,7 +148,7 @@ namespace ke
         const VkViewport& getViewport() const;
         const VkRect2D& getScissor() const;
         ke::SceneManager& sceneManager = ke::SceneManager::getInstance();
-        const nodes::ISceneObject* const getSceneObject() const
+        nodes::ISceneObject* const getSceneObject() const
         {
             if(!pSceneObject || pSceneObject == nullptr)
             {
