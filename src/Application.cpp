@@ -65,7 +65,7 @@ void ke::Core::Application::run()
     nodes::ISceneObject* sceneObject = mSceneManager.getSceneObject();
     int rootDepth = sceneObject->getDepth();
 
-    sceneObject->createChild<nodes::Rect2D>(static_cast<uint8_t>(rootDepth + 1), 0, 0, 100, 100);
+    sceneObject->createChild<nodes::Rect2D>(static_cast<uint8_t>(rootDepth + 1), 0, 0, 100, 100, "StartingRect");
 
     while (!mWindow->shouldClose())
     {

@@ -9,7 +9,7 @@ namespace ke
     {
         enum class ObjectType
         {
-            ROOT, SCENE, RECT2D, CIRCLE, MAX_ENUM
+            ROOT, SCENE, RECT2D, CIRCLE,  MAX_ENUM
         };
 
         #define OBJECT_TYPE(type) static ObjectType getStaticType() {return ObjectType::type;} \
@@ -75,7 +75,8 @@ namespace ke
             virtual ObjectType getType() const = 0;
 
         protected:
-            DefaultObject(uint8_t depth)
+            DefaultObject(uint8_t depth, std::string _name = "Object")
+                : name(_name)
             {
                 static uint64_t id = 0;
                 mObjectID = id++;
@@ -98,8 +99,8 @@ namespace ke
         public:
             virtual ~SystemObject() = default;
         protected:
-            SystemObject(uint8_t depth)
-                : DefaultObject(depth) {}
+            SystemObject(uint8_t depth, std::string _name = "SystemObject")
+                : DefaultObject(depth, _name) {}
 
         private:
         };
@@ -114,7 +115,7 @@ namespace ke
 
         private:
             RootObject()
-                : SystemObject(0) {}
+                : SystemObject(0, "RootObject") {}
 
             std::vector<std::unique_ptr<SystemObject>> mChildren;
         };
@@ -126,7 +127,7 @@ namespace ke
             OBJECT_TYPE(SCENE)
         protected:
             ISceneObject(uint8_t depth)
-                : SystemObject(depth) {}
+                : SystemObject(depth, "Scene") {}
         };
 
         template<typename T>
@@ -146,8 +147,8 @@ namespace ke
         class Node2D : public DefaultObject
         {
         public:
-            Node2D(uint8_t depth)
-                : DefaultObject(depth) {}
+            Node2D(uint8_t depth, std::string _name = "Node2D")
+                : DefaultObject(depth, _name) {}
 
             void setPosition(glm::vec2 newPos) {mPosition = newPos;}
             glm::vec2 getPosition() const {return mPosition;}
@@ -166,8 +167,8 @@ namespace ke
         class Node3D : public DefaultObject
         {
         public:
-            Node3D(uint8_t depth)
-                : DefaultObject(depth) {}
+            Node3D(uint8_t depth, std::string _name = "Node3D")
+                : DefaultObject(depth, _name) {}
         
             void setPosition(glm::vec3 newPos) {mPosition = newPos;}
             glm::vec3 getPosition() const {return mPosition;}

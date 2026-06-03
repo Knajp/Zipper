@@ -8,8 +8,8 @@ namespace ke
         class PhysicsObject2D : public Node2D
         {
         public:
-            PhysicsObject2D(uint8_t depth)
-                : Node2D(depth) {}
+            PhysicsObject2D(uint8_t depth, std::string _name = "PhysicsObject2D")
+                : Node2D(depth, _name) {}
 
         private:
             bool mHasGravity;
@@ -18,8 +18,8 @@ namespace ke
         class PhysicsObject3D : public Node3D
         {
         public:
-            PhysicsObject3D(uint8_t depth)
-                : Node3D(depth) {}
+            PhysicsObject3D(uint8_t depth, std::string _name = "PhysicsObject3D")
+                : Node3D(depth, _name) {}
 
         private:
             bool mHasGravity;
