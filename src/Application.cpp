@@ -1,5 +1,6 @@
 #include "Application.hpp"
-#include "Nodes/NodeInclude.hpp"
+#include "Nodes/Object.hpp"
+#include "Nodes/PhysicsObject.hpp"
 
 ke::Core::Application& ke::Core::Application::getInstance()
 {
@@ -63,9 +64,7 @@ void ke::Core::Application::run()
     mAudioManager.PlayAudio(musicIndex);
 
     nodes::ISceneObject* sceneObject = mSceneManager.getSceneObject();
-    int rootDepth = sceneObject->getDepth();
-
-    sceneObject->createChild<nodes::Rect2D>(static_cast<uint8_t>(rootDepth + 1), 0, 0, 100, 100, "StartingRect");
+    sceneObject->createChild<nodes::Rect2D>(0, 0, 500, 500);
 
     while (!mWindow->shouldClose())
     {

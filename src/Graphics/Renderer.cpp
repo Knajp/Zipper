@@ -1,6 +1,7 @@
 #include "Renderer.hpp"
 #include <iostream>
 #include <set>
+#include <vulkan/vulkan_core.h>
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
@@ -612,6 +613,11 @@ ke::util::QueueFamilyIndices ke::Graphics::Renderer::findQueueFamilyIndices(VkPh
 
 ke::util::SwapchainSupportDetails ke::Graphics::Renderer::querySwapchainSupport(VkPhysicalDevice device)
 {
+    VkPhysicalDeviceProperties props;
+    vkGetPhysicalDeviceProperties(device, &props);
+
+    std::cout << props.deviceName << "\n";
+
    util::SwapchainSupportDetails swapchainSupport;
    
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, mSurface, &swapchainSupport.surfaceCapabilities);
@@ -686,6 +692,11 @@ void ke::Graphics::Renderer::createSwapchain(GLFWwindow *window)
 {
     util::SwapchainSupportDetails support = querySwapchainSupport(mPhysicalDevice);
 
+    for(const auto& presentMode : support.presentModes)
+    {
+        if(presentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+            mLogger.warn("Mailbox found on device!");
+    }
     VkSurfaceFormatKHR surfaceFormat = chooseSwapchainSurfaceFormat(support.surfaceFormats);
     VkPresentModeKHR presentMode = chooseSwapchainPresentMode(support.presentModes);
     VkExtent2D extent = chooseSwapExtent(support.surfaceCapabilities, window);

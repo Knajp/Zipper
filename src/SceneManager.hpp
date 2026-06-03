@@ -147,7 +147,7 @@ namespace ke
 
         const VkViewport& getViewport() const;
         const VkRect2D& getScissor() const;
-        ke::SceneManager& sceneManager = ke::SceneManager::getInstance();
+        
         nodes::ISceneObject* const getSceneObject() const
         {
             if(!pSceneObject || pSceneObject == nullptr)
@@ -158,6 +158,11 @@ namespace ke
             }
 
             return pSceneObject;
+        }
+        nodes::RootObject* const getRootObject() const
+        {
+            nodes::RootObject* pRootObject = mRootObject.get();
+            return pRootObject;
         }
 
 

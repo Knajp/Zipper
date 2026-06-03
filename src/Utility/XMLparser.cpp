@@ -189,7 +189,7 @@ void ke::gui::Explorer::reconstructExplorerVertices()
     uint32_t indexOffset = 0;
     for(uint64_t entryID : mVisibleEntries)
     {
-        ExpEntry& entry = mEntries[entryID];
+        ExpEntry& entry = mEntries.at(entryID);
         std::vector<util::str::Vertex2P3C2T> entryVertices{};
 
         float entryInset = entry.depth * inset;
