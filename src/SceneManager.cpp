@@ -17,10 +17,7 @@ void ke::SceneManager::init(glm::ivec2 pos, glm::ivec2 extent, int windowHeight)
 
 void ke::SceneManager::drawScene() const
 {
-    for(const auto& object : mSceneObjects)
-    {
-        object->Draw();
-    }
+    //TODO
 }
 
 float ke::SceneManager::getSceneAspectRatio() const
@@ -43,7 +40,7 @@ void ke::SceneManager::recreateViewport(glm::ivec2 pos, glm::ivec2 extent, int w
 
 void ke::SceneManager::terminate()
 {
-   mSceneObjects.clear();
+    //TODO
 }
 
 const VkViewport &ke::SceneManager::getViewport() const
@@ -54,31 +51,5 @@ const VkViewport &ke::SceneManager::getViewport() const
 const VkRect2D &ke::SceneManager::getScissor() const
 {
     return mSceneScissor;
-}
-
-void ke::SceneManager::addObjectToScene(std::unique_ptr<SceneObject> object)
-{
-    mSceneObjects.push_back(std::move(object));
-}
-
-void ke::SceneObject::Draw() const
-{
-    ke::Graphics::Renderer& renderer = ke::Graphics::Renderer::getInstance();
-
-    renderer.pickTextureIndex(mTextureIndex);
-    
-    renderer.drawBuffersIndexed(mMesh.vertexBuffer, mMesh.indexBuffer, mMesh.mIndices.size());
-}
-
-void ke::SceneObject::setTexture(std::string textureName)
-{
-    ke::Graphics::Texture::TextureManager& textureManager = ke::Graphics::Texture::TextureManager::getInstance();
-
-    mTextureIndex = textureManager.getTextureIndex(textureName);
-}
-
-void ke::SceneObject::loadMesh(util::Mesh &mesh)
-{
-    mMesh = std::move(mesh);
 }
 

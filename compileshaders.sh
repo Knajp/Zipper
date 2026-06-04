@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir ./shader/bin
 $VULKANSDK/x86_64/bin/glslc shader/shader.vert -o shader/bin/vert.spv
 $VULKANSDK/x86_64/bin/glslc shader/shader.frag -o shader/bin/frag.spv
 $VULKANSDK/x86_64/bin/glslc shader/text.vert -o shader/bin/textvert.spv

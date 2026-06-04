@@ -8,7 +8,8 @@ namespace ke
         class PhysicsObject2D : public Node2D
         {
         public:
-            PhysicsObject2D() = default;
+            PhysicsObject2D(std::string _name = "PhysicsObject2D")
+                : Node2D(_name) {}
 
         private:
             bool mHasGravity;
@@ -17,7 +18,8 @@ namespace ke
         class PhysicsObject3D : public Node3D
         {
         public:
-            PhysicsObject3D() = default;
+            PhysicsObject3D(std::string _name = "PhysicsObject3D")
+                : Node3D(_name) {}
 
         private:
             bool mHasGravity;

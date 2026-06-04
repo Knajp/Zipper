@@ -2,5 +2,4 @@
 
 <KEUIcomponent name="explorer" x="80" y="0" w="20" h="97">
     <Frame x="0" y="0" w="100" h="100" color="#314f55"></Frame>
-    <Explorer x="1" y="1" w="98" h="98" color="36555b"></Explorer>
 </KEUIcomponent>

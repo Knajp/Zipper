@@ -6,37 +6,7 @@
 
 std::unordered_map<std::string, std::function<void()>> ke::gui::Component::mHandlers = 
 {
-    {"addelement", []() 
-    {
-        util::Mesh mesh("src/Model/viking_room.obj");
-
-        SceneObject object;
-        object.loadMesh(mesh);
-        object.setTexture("viking_room");
-
-        SceneManager& sceneManager = SceneManager::getInstance();
-        sceneManager.addObjectToScene(std::make_unique<SceneObject>(std::move(object)));
-
-    }},
-    {"submitinput", []()
-    {
-        UImanager& uiman = UImanager::getInstance();
-
-        std::string filename = uiman.getInputFieldValue("objfile");
-
-        std::string filepath = "src/Models/" + filename + ".obj";
-        std::string texturepath = "src/Textures/" + filename + ".png";
-
-        util::Mesh mesh(filepath);
-
-        SceneObject object;
-        object.loadMesh(mesh);
-        if(std::filesystem::exists(texturepath))
-            object.setTexture(filename);
-
-        SceneManager& sceneManager = SceneManager::getInstance();
-        sceneManager.addObjectToScene(std::make_unique<SceneObject>(std::move(object)));
-    }}
+    
 };
 ke::gui::Component::Component(std::string filepath)
     : mIndexBuffer(Graphics::Renderer::getInstance().getDevice()), mVertexBuffer(Graphics::Renderer::getInstance().getDevice())
@@ -106,6 +76,8 @@ ke::gui::Component::Component(std::string filepath)
 
             mButtons.push_back(button);
         }
+        if(obj->getType() == gui::Explorer::getStaticType())
+            pExplorerElement = dynamic_cast<gui::Explorer*>(obj.get());
     }
 
     
@@ -160,7 +132,8 @@ ke::gui::Component::Component(Component&& other) noexcept
       mIndexBuffer(std::move(other.mIndexBuffer)), 
       mVertexBuffer(std::move(other.mVertexBuffer)),
       mIndices(std::move(other.mIndices)),
-      mVertices(std::move(other.mVertices))
+      mVertices(std::move(other.mVertices)),
+      pExplorerElement(other.pExplorerElement)
 {
 }
 
@@ -174,6 +147,7 @@ ke::gui::Component& ke::gui::Component::operator=(Component&& other) noexcept
         mVertexBuffer = std::move(other.mVertexBuffer);
         mIndices = std::move(other.mIndices);
         mVertices = std::move(other.mVertices);
+        pExplorerElement = other.pExplorerElement;
     }
     return *this;
 }
@@ -190,6 +164,8 @@ void ke::gui::Component::Draw(VkCommandBuffer commandBuffer)
 
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(mIndices.size()), 1, 0, 0, 0);
 
+    if(pExplorerElement)
+        pExplorerElement->DrawGeometry();
 }
 
 void ke::gui::Component::DrawText()

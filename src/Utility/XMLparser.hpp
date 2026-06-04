@@ -90,12 +90,18 @@ namespace ke
             void updateExplorerEntries();
             void reconstructExplorerVertices();
 
+            void DrawGeometry() const;
+            //void DrawText() const;
+
             std::unordered_map<uint64_t, ExpEntry> mEntries;
             std::vector<uint64_t> mVisibleEntries;
+
+            GUI_TYPE(TypeExplorer)
 
         private:
             std::vector<util::str::Vertex2P3C2T> mVertices;
             std::vector<uint32_t> mIndices;
+            //std::vector<Graphics::Text::TextInstance> mTextInstances;
 
             util::Buffer mVertexBuffer;
             util::Buffer mIndexBuffer;

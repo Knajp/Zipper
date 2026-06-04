@@ -189,7 +189,7 @@ void ke::gui::Explorer::reconstructExplorerVertices()
     uint32_t indexOffset = 0;
     for(uint64_t entryID : mVisibleEntries)
     {
-        ExpEntry& entry = mEntries[entryID];
+        ExpEntry& entry = mEntries.at(entryID);
         std::vector<util::str::Vertex2P3C2T> entryVertices{};
 
         float entryInset = entry.depth * inset;
@@ -214,7 +214,14 @@ void ke::gui::Explorer::reconstructExplorerVertices()
     }
 
     Graphics::Renderer& rend = Graphics::Renderer::getInstance();
-    rend.createVertexBuffer<util::str::Vertex2P3C2T>(mVertices, mVertexBuffer.buffer, mVertexBuffer.bufferMemory);
-    rend.createIndexBuffer(mIndices, mIndexBuffer.buffer, mIndexBuffer.bufferMemory);
+    //rend.createVertexBuffer<util::str::Vertex2P3C2T>(mVertices, mVertexBuffer.buffer, mVertexBuffer.bufferMemory);
+    //rend.createIndexBuffer(mIndices, mIndexBuffer.buffer, mIndexBuffer.bufferMemory);
     
+}
+
+void ke::gui::Explorer::DrawGeometry() const
+{
+    ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
+
+    rend.drawBuffersIndexed(mVertexBuffer, mIndexBuffer, static_cast<uint32_t>(mIndices.size()));
 }

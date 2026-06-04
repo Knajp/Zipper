@@ -1,4 +1,6 @@
 #include "Application.hpp"
+#include "Nodes/Object.hpp"
+#include "Nodes/PhysicsObject.hpp"
 
 ke::Core::Application& ke::Core::Application::getInstance()
 {
@@ -56,15 +58,18 @@ void ke::Core::Application::init()
 
 void ke::Core::Application::run()
 {
-    mLogger.trace("Proceeding to main loop.");
+    mLogger.info("Proceeding to main loop.");
     
     uint16_t musicIndex = mAudioManager.createAudio("src/Sounds/music.mp3", AL_TRUE, 1.0f, 1.0f, "music");
     mAudioManager.PlayAudio(musicIndex);
 
+   // nodes::ISceneObject* sceneObject = mSceneManager.getSceneObject();
+    //sceneObject->createChild<nodes::Rect2D>(0, 0, 500, 500);
+    //mLogger.info("Created a child");
 
     while (!mWindow->shouldClose())
     {
-
+        
         mWindow->calculateAspectRatio();
         mRenderer.readyCanvas(mWindow->getWindowHandle());
         VkCommandBuffer cb = mRenderer.getCurrentCommandBuffer();

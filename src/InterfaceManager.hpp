@@ -42,6 +42,8 @@ namespace ke
             std::vector<util::str::Vertex2P3C2T> mVertices;
             std::vector<uint32_t> mIndices;
 
+            gui::Explorer* pExplorerElement = nullptr;
+            
             static std::unordered_map<std::string, std::function<void()>> mHandlers;
         };
 
