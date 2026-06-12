@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <span>
+#include "../Utility/RenderUtil.hpp"
+#include "../Utility/structs.hpp"
 
 namespace ke
 {
@@ -257,24 +259,16 @@ namespace ke
         class SceneObject : public ISceneObject
         {
         public:
-        /**
-         * @brief Gets the only instance of the Scene object. To be used by engine.
-         * @details Part of the Singleton structure.
-         * 
-         * @return SceneObject& 
-         */
-            static SceneObject& getInstance() {static SceneObject instance; return instance;}
+            /**
+            * @brief Only to be called one by the engine. Not to be used by user. Creates a new SceneObject.
+            * 
+            * @param _name The object's name.
+            */
+            SceneObject(std::string _name = "Scene")
+                : ISceneObject(_name) {}
             OBJECT_TYPE(SCENE)
 
         private:
-        /**
-         * @brief Only to be called one by the engine. Not to be used by user. Creates a new SceneObject.
-         * 
-         * @param _name The object's name.
-         */
-            SceneObject(std::string _name)
-                : ISceneObject(_name) {}
-
         /**
          * @brief The object's children. Essentialy, what's visible on the screen.
          * 
@@ -339,6 +333,28 @@ namespace ke
              * 
              */
             float mScale;
+
+            /**
+             * @brief The vertex buffer (Vulkan Resource)
+             * 
+             */
+            ke::util::Buffer mVertexBuffer;
+            /**
+             * @brief The index buffer (Vulkan Resource)
+             * 
+             */
+            ke::util::Buffer mIndexBuffer;
+
+            /**
+             * @brief The vertices
+             * 
+             */
+            std::vector<ke::util::str::Vertex2P3C2T> mVertices;
+            /**
+             * @brief The indices
+             * 
+             */
+            std::vector<uint16_t> mIndices;
         };
 
         /**

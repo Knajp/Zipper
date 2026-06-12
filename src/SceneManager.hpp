@@ -150,18 +150,21 @@ namespace ke
         
         nodes::ISceneObject* const getSceneObject() const
         {
-            if(!pSceneObject || pSceneObject == nullptr)
-            {
-                for(auto& child : mRootObject->getChildren())
-                    if(child->getType() == nodes::ISceneObject::getStaticType())
-                        pSceneObject = dynamic_cast<nodes::ISceneObject*>(child.get());
-            }
+            if(pSceneObject)
+                return pSceneObject;
+            
+            auto children = mRootObject.getChildren();
+            if(children.empty()) return nullptr;
 
+            for(auto& child : children)
+                if(child->getType() == nodes::ISceneObject::getStaticType())
+                    pSceneObject = dynamic_cast<nodes::ISceneObject*>(child.get());
+        
             return pSceneObject;
         }
         nodes::RootObject* const getRootObject() const
         {
-            nodes::RootObject* pRootObject = mRootObject.get();
+            nodes::RootObject* pRootObject = &mRootObject;
             return pRootObject;
         }
 
@@ -175,7 +178,7 @@ namespace ke
 
         bool isFocused = true;
         
-        std::unique_ptr<nodes::RootObject> mRootObject;
+        nodes::RootObject& mRootObject = nodes::RootObject::getInstance();
         mutable nodes::ISceneObject* pSceneObject = nullptr;
     };
 }
