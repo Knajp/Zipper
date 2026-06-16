@@ -18,6 +18,7 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 		self.event(event);
 	}
 	else std::cerr << "Invalid GLFW action value!\n";
+
 }
 
 static void charCallback(GLFWwindow* window, unsigned int codepoint)
