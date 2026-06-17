@@ -135,7 +135,7 @@ namespace ke
             static SceneManager instance;
             return instance;
         }
-
+        
 
         void init(glm::ivec2 pos, glm::ivec2 extent, int windowHeight);
         void drawScene() const;

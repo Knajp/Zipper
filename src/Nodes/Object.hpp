@@ -60,6 +60,16 @@ namespace ke
             {
                 return mObjectID == other.mObjectID;
             }
+            const DefaultObject* operator[](std::string childName)
+            {
+                for(auto& child : mChildren)
+                {
+                    if(child->name == childName)
+                        return child.get();
+                }
+
+                return nullptr;
+            }
 
             std::string name;
             
