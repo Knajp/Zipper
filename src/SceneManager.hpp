@@ -168,7 +168,11 @@ namespace ke
             return pRootObject;
         }
 
-
+        static glm::ivec2 normalizedToPixel(glm::vec2 norm);
+        static glm::vec2 pixelToNormalized(glm::ivec2 pix);
+        static glm::vec2 pixelSizeToNormalized(glm::ivec2 pixSize);
+        static glm::ivec2 normalizedSizeToPixel(glm::vec2 normSize);
+        
     private:
 
         SceneManager() = default;

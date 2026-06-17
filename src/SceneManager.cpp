@@ -3,6 +3,48 @@
 #include "Nodes/Object.hpp"
 #include <memory>
 
+glm::ivec2 ke::SceneManager::normalizedToPixel(glm::vec2 norm)
+{
+    ke::SceneManager& sman = ke::SceneManager::getInstance();
+    glm::ivec2 dims = {sman.getViewport().width, sman.getViewport().height};
+
+    return {
+    static_cast<int>((norm.x + 1.0f) * 0.5f * (dims.x - 1)),
+    static_cast<int>((norm.y + 1.0f) * 0.5f * (dims.y - 1))
+    };
+}
+
+glm::vec2 ke::SceneManager::pixelToNormalized(glm::ivec2 pix)
+{
+    ke::SceneManager& sman = ke::SceneManager::getInstance();
+    glm::ivec2 dims = {sman.getViewport().width, sman.getViewport().height};
+
+    return {
+        2.0f * static_cast<float>(pix.x) / (dims.x - 1) - 1.0f,
+        2.0f * static_cast<float>(pix.y) / (dims.y - 1) - 1.0f
+    };
+}
+glm::vec2 ke::SceneManager::pixelSizeToNormalized(glm::ivec2 pixSize)
+{
+    ke::SceneManager& sman = ke::SceneManager::getInstance();
+    glm::ivec2 dims = {sman.getViewport().width, sman.getViewport().height};
+
+    return {
+        2.0f * static_cast<float>(pixSize.x) / static_cast<float>(dims.x),
+        2.0f * static_cast<float>(pixSize.y) / static_cast<float>(dims.y)
+    };
+}
+glm::ivec2 ke::SceneManager::normalizedSizeToPixel(glm::vec2 normSize)
+{
+    ke::SceneManager& sman = ke::SceneManager::getInstance();
+    glm::ivec2 dims = {sman.getViewport().width, sman.getViewport().height};
+
+    return {
+        static_cast<int>((normSize.x * static_cast<float>(dims.x)) / 2.0f),
+        static_cast<int>((normSize.y * static_cast<float>(dims.y)) / 2.0f)
+    };
+}
+
 void ke::SceneManager::init(glm::ivec2 pos, glm::ivec2 extent, int windowHeight)
 {
 
@@ -23,14 +65,9 @@ void ke::SceneManager::drawScene() const
 {
     for(auto node : pSceneObject->gatherDescendants())
     {
-        if(auto* node2D = dynamic_cast<nodes::Node2D*>(node))
-        {
+        nodes::UserObject* userObject = dynamic_cast<nodes::UserObject*>(node);
 
-        }
-        else if(auto* node3D = dynamic_cast<nodes::Node3D*>(node))
-        {
-
-        }
+        userObject->Draw();
     }
 }
 

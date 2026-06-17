@@ -8,18 +8,8 @@
       "preLaunchTask": "buildDebug",
       "program": "${workspaceRoot}/bin/Debug/NewEngine",
       "cwd": "${workspaceFolder}",
-<<<<<<< HEAD
       "externalConsole": false,
-      "args": [],
-      "logging": {
-        "engineLogging": true,
-        "trace": true,
-      "traceResponse": true
-      }
-=======
-      "externalConsole": true,
       "args": []
->>>>>>> objectAdding
     },
     {
       "name": "Release",
@@ -37,15 +27,9 @@
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-<<<<<<< HEAD
-      "externalConsole": true,
-      "cwd": "/home/lenovo/Documents/cpp/NewEngine/src",
-      "program": "/home/lenovo/Documents/cpp/NewEngine/bin/Debug/NewEngine",
-=======
       "externalConsole": false,
       "cwd": "/home/lenovo/Documents/cpp/NewEngine/src/Graphics",
       "program": "/home/lenovo/Documents/cpp/NewEngine/src/Graphics/build/Debug/outDebug",
->>>>>>> objectAdding
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

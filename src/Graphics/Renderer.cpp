@@ -6,6 +6,7 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "../SceneManager.hpp"
 #include <chrono>
 #include <type_traits>
 
@@ -31,6 +32,27 @@ ke::Graphics::Renderer &ke::Graphics::Renderer::getInstance()
 {
     static Renderer instance;
     return instance;
+}
+
+glm::ivec2 ke::Graphics::Renderer::normalizedToPixel(glm::vec2 norm)
+{
+    ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
+    glm::ivec2 dims = rend.getSwapchainDimensions();
+
+    return {
+    static_cast<int>((norm.x + 1.0f) * 0.5f * (dims.x - 1)),
+    static_cast<int>((norm.y + 1.0f) * 0.5f * (dims.y - 1))
+    };
+}
+glm::vec2 ke::Graphics::Renderer::pixelToNormalized(glm::ivec2 pix)
+{
+    ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
+    glm::ivec2 dims = rend.getSwapchainDimensions();
+
+    return {
+        2.0f * static_cast<float>(pix.x) / (dims.x - 1) - 1.0f,
+        2.0f * static_cast<float>(pix.y) / (dims.y - 1) - 1.0f
+    };
 }
 
 void ke::Graphics::Renderer::init(GLFWwindow* window)
@@ -161,17 +183,21 @@ void ke::Graphics::Renderer::updateUIUniforms(float aspectRatio)
 
 void ke::Graphics::Renderer::updateSceneUniforms(float aspectRatio)
 {
-    static auto startTime = std::chrono::high_resolution_clock::now();
+    //static auto startTime = std::chrono::high_resolution_clock::now();
 
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+    //auto currentTime = std::chrono::high_resolution_clock::now();
+    //float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
+    ke::SceneManager& sman = ke::SceneManager::getInstance();
     util::UniformBufferObject ubo{};
-    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f) );
-    ubo.proj = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
-    ubo.view = glm::lookAt(glm::vec3{1.0f, 1.0f, 2.0f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
-    ubo.proj[1][1] *= -1;
-
+    ubo.model = glm::mat4(1.0f);
+    ubo.proj = glm::ortho(
+    0.0f, static_cast<float>(sman.getViewport().width),
+    0.0f, static_cast<float>(sman.getViewport().height),
+    -1.0f, 1.0f
+    );
+    //ubo.view = glm::lookAt(glm::vec3{1.0f, 1.0f, 2.0f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
+    ubo.view = glm::mat4(1.0f);
     memcpy(sceneUniformBuffersMapped[currentFrameInFlight], &ubo, sizeof(ubo));
 }
 
