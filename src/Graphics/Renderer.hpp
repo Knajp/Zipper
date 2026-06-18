@@ -25,6 +25,9 @@ namespace ke
         public:
             static Renderer& getInstance();
             
+            static glm::ivec2 normalizedToPixel(glm::vec2 norm);
+            static glm::vec2 pixelToNormalized(glm::ivec2 pix);
+            
             void init(GLFWwindow* window);
             void terminate();
 

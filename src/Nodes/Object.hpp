@@ -4,6 +4,7 @@
 #include <span>
 #include "../Utility/RenderUtil.hpp"
 #include "../Utility/structs.hpp"
+#include "../Graphics/Renderer.hpp"
 
 namespace ke
 {
@@ -59,6 +60,16 @@ namespace ke
             bool operator==(const DefaultObject& other) const
             {
                 return mObjectID == other.mObjectID;
+            }
+            const DefaultObject* operator[](std::string childName)
+            {
+                for(auto& child : mChildren)
+                {
+                    if(child->name == childName)
+                        return child.get();
+                }
+
+                return nullptr;
             }
 
             std::string name;
@@ -291,9 +302,17 @@ namespace ke
             */
             void Draw() const
             {
+                ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
 
+                rend.drawBuffersIndexed(mVertexBuffer, mIndexBuffer, static_cast<uint32_t>(mIndices.size()));
             }
-        private:
+
+            void Destroy()
+            {
+                mIndexBuffer.destroy();
+                mVertexBuffer.destroy();
+            }
+        protected:
             /**
              * @brief The vertex buffer (Vulkan Resource)
              * 
@@ -309,12 +328,12 @@ namespace ke
              * @brief The vertices
              * 
              */
-            std::vector<ke::util::str::Vertex2P3C2T> mVertices;
+            std::vector<ke::util::str::Vertex3P3C2T> mVertices;
             /**
              * @brief The indices
              * 
              */
-            std::vector<uint16_t> mIndices;
+            std::vector<uint32_t> mIndices;
         };
 
         /**

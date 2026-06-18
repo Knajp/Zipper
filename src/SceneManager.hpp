@@ -135,7 +135,7 @@ namespace ke
             static SceneManager instance;
             return instance;
         }
-
+        
 
         void init(glm::ivec2 pos, glm::ivec2 extent, int windowHeight);
         void drawScene() const;
@@ -168,7 +168,11 @@ namespace ke
             return pRootObject;
         }
 
-
+        static glm::ivec2 normalizedToPixel(glm::vec2 norm);
+        static glm::vec2 pixelToNormalized(glm::ivec2 pix);
+        static glm::vec2 pixelSizeToNormalized(glm::ivec2 pixSize);
+        static glm::ivec2 normalizedSizeToPixel(glm::vec2 normSize);
+        
     private:
 
         SceneManager() = default;

@@ -190,7 +190,5 @@ namespace ke
                 device = _device;
             }
         };
-
-
     }
 }

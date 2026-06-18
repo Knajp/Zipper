@@ -31,6 +31,8 @@ namespace ke
             void DrawText();
 
             bool getInputFieldValue(const std::string& name, std::string& value);
+            gui::Explorer* getExplorer() const
+                {return pExplorerElement;}
         private:
             std::vector<std::unique_ptr<gui::Element>> mFrames;
             std::vector<gui::Button*> mButtons;
@@ -73,6 +75,8 @@ namespace ke
                 return instance;
             }
             
+            void updateExplorer() const;
+
             void loadComponents(GLFWwindow* window);
             void drawComponents(VkCommandBuffer commandBuffer);
             void drawComponentTextLabels();
@@ -96,6 +100,7 @@ namespace ke
 
             bool mFocused = false;
             gui::Element* pFocusedElement = nullptr;
+            mutable gui::Explorer* pExplorer = nullptr;
 
             std::vector<std::unique_ptr<Component>> mComponents;
             SceneComponent mSceneComponent;

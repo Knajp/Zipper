@@ -9,10 +9,10 @@ namespace ke::nodes
     public:
         OBJECT_TYPE(RECT2D)
         Rect2D(glm::ivec2 pos, glm::ivec2 ext, std::string _name = "Rect2D")
-            : Node2D(_name), position(pos), extent(ext) {}
+            : Node2D(_name), position(pos), extent(ext) {generateRectVertices();}
 
         Rect2D(int _x, int _y, int _width, int _height, std::string _name = "Rect2D")
-            : Node2D(_name), x(_x), y(_y), width(_width), height(_height) {}
+            : Node2D(_name), x(_x), y(_y), width(_width), height(_height) {generateRectVertices();}
         
         union
         {
@@ -33,6 +33,9 @@ namespace ke::nodes
                 int height;
             };
         };
+    private:
+        void generateRectVertices();
+ 
     };
 }
 

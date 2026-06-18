@@ -1,4 +1,4 @@
-
+#pragma once
 #include "Object.hpp"
 namespace ke::nodes
 {
@@ -9,6 +9,7 @@ namespace ke::nodes
     class Circle : public Node2D
     {
     public:
+            OBJECT_TYPE(CIRCLE)
     /**
      * @brief Construct a new Circle object using vectors
      * 
@@ -17,7 +18,7 @@ namespace ke::nodes
      * @param _name Object name.
      */
         Circle(int rad, glm::ivec2 pos, std::string _name = "Circle")
-            : Node2D(_name), radius(rad), position(pos) {}
+            : Node2D(_name), radius(rad), position(pos) {generateCircleVertices();}
     /**
      * @brief Construct a new Circle object using scalars.
      * 
@@ -25,8 +26,8 @@ namespace ke::nodes
      * @param _x Circle center-x.
      * @param _y Circle center-y.
      */
-        Circle(int rad, int _x, int _y)
-            : Node2D(), radius(rad), x(_x), y(_y) {}
+        Circle(int rad, int _x, int _y, std::string _name = "Circle")
+            : Node2D(_name), radius(rad), x(_x), y(_y) {generateCircleVertices();}
 
         int radius;
         union
@@ -39,6 +40,7 @@ namespace ke::nodes
                 int y;
             };
         };
-        
+    private:
+        void generateCircleVertices();
     };
 }

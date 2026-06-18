@@ -1,4 +1,5 @@
 #include "Application.hpp"
+#include "Nodes/NodeInclude.hpp"
 #include "Nodes/Object.hpp"
 #include "Nodes/PhysicsObject.hpp"
 
@@ -53,6 +54,7 @@ void ke::Core::Application::init()
     glfwGetFramebufferSize(mWindow->getWindowHandle(), &width, &height);
     mSceneManager.init(mUIManager.getSceneComponentPosition(), mUIManager.getSceneComponentExtent(), height);
 
+    
     mLogger.info("Finished application initialization.");
 }
 
@@ -65,6 +67,9 @@ void ke::Core::Application::run()
 
     nodes::ISceneObject* pSceneObject = mSceneManager.getSceneObject();
     nodes::Rect2D* rect = pSceneObject->createChild<nodes::Rect2D>(0,0,500,500, "Hello!");
+    nodes::Circle* circle = pSceneObject->createChild<nodes::Circle>(100, 700, 700, "Circlebig");
+
+    mUIManager.updateExplorer();
 
     while (!mWindow->shouldClose())
     {
@@ -97,6 +102,9 @@ void ke::Core::Application::run()
         mRenderer.finishDraw(mWindow->getWindowHandle());
         Graphics::Window::pollEvents();
     }
+    
+    circle->Destroy();
+    rect->Destroy();
     
     mAudioManager.StopAudio(musicIndex);
     mLogger.info("Exit main loop.");
@@ -196,4 +204,6 @@ void ke::Core::Application::onEvent(Events::Event &ev)
         return true;
     });
 }
+
+
 
