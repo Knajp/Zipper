@@ -173,11 +173,10 @@ void ke::Graphics::Renderer::updateUIUniforms(float aspectRatio)
 {
     util::UniformBufferObject ubo{};
     ubo.model = glm::mat4(1.0f);
-    ubo.proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+    ubo.proj = glm::ortho(0.0f, static_cast<float>(mSwapchainExtent.width), static_cast<float>(mSwapchainExtent.height), 0.0f, -1.0f, 1.0f);
     ubo.view = glm::mat4(1.0f);
     
-    ubo.proj[1][1] *= -1;
-
+    
     memcpy(uniformBuffersMapped[currentFrameInFlight], &ubo, sizeof(ubo));
 }
 
@@ -191,13 +190,10 @@ void ke::Graphics::Renderer::updateSceneUniforms(float aspectRatio)
     ke::SceneManager& sman = ke::SceneManager::getInstance();
     util::UniformBufferObject ubo{};
     ubo.model = glm::mat4(1.0f);
-    ubo.proj = glm::ortho(
-    0.0f, static_cast<float>(sman.getViewport().width),
-    0.0f, static_cast<float>(sman.getViewport().height),
-    -1.0f, 1.0f
-    );
+    ubo.proj = glm::ortho(0.0f, static_cast<float>(sman.getViewport().width),0.0f, static_cast<float>(sman.getViewport().height),-1.0f, 1.0f);
     //ubo.view = glm::lookAt(glm::vec3{1.0f, 1.0f, 2.0f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
     ubo.view = glm::mat4(1.0f);
+
     memcpy(sceneUniformBuffersMapped[currentFrameInFlight], &ubo, sizeof(ubo));
 }
 

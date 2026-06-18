@@ -15,6 +15,40 @@ namespace ke
 {
     namespace gui
     {
+        enum class VALTYPE {PERCENT, PIXEL, MAX_ENUM};
+        struct XMLValue
+        {
+            XMLValue(std::string str)
+            {
+                if(str.ends_with("%"))
+                {
+                    type = VALTYPE::PERCENT;
+                    value = std::stod(str.substr(0, str.size() - 1));
+                }
+                else if(str.ends_with("px"))
+                {
+                    type = VALTYPE::PIXEL;
+                    value = std::stod(str.substr(0, str.size() - 2));
+                }
+                else std::cout << "Invalid attribute value type in XML file!";
+
+                
+            }
+
+            int toPixels(double ref)
+            {
+                switch(type)
+                {
+                    case ke::gui::VALTYPE::PIXEL: return (int)value; break;
+                    case ke::gui::VALTYPE::PERCENT: return (int)(value / 100.0 * ref); break;
+                    case ke::gui::VALTYPE::MAX_ENUM: return 0; break;
+                    default : 0;
+                }
+            }
+            double value;
+            VALTYPE type;
+        };
+
         enum class UIType
         {
             TypeFrame, TypeButton, TypeInputField, TypeExplorer
@@ -82,14 +116,13 @@ namespace ke
                 Graphics::Renderer& rend = Graphics::Renderer::getInstance();
                 mVertexBuffer.setDevice(rend.getDevice());
                 mIndexBuffer.setDevice(rend.getDevice());
+            }
 
+            void Update()
+            {
                 updateExplorerEntries();
                 reconstructExplorerVertices();
             }
-
-            void updateExplorerEntries();
-            void reconstructExplorerVertices();
-
             void DrawGeometry() const;
             //void DrawText() const;
 
@@ -99,12 +132,18 @@ namespace ke
             GUI_TYPE(TypeExplorer)
 
         private:
+            void updateExplorerEntries();
+            void reconstructExplorerVertices();
+
             std::vector<util::str::Vertex2P3C2T> mVertices;
             std::vector<uint32_t> mIndices;
             //std::vector<Graphics::Text::TextInstance> mTextInstances;
 
             util::Buffer mVertexBuffer;
             util::Buffer mIndexBuffer;
+
+            VkViewport mViewport;
+            VkRect2D mScissor;
         };
 
         enum InputType

@@ -51,12 +51,12 @@ void ke::SceneManager::init(glm::ivec2 pos, glm::ivec2 extent, int windowHeight)
     mSceneViewport.height = extent.y;
     mSceneViewport.width = extent.x;
     mSceneViewport.x = pos.x;
-    mSceneViewport.y = windowHeight - (pos.y + extent.y);
+    mSceneViewport.y = pos.y;
     mSceneViewport.minDepth = 0.0f;
     mSceneViewport.maxDepth = 1.0f;
 
     mSceneScissor.extent = {static_cast<uint32_t>(extent.x), static_cast<uint32_t>(extent.y)};
-    mSceneScissor.offset = {pos.x, windowHeight - (pos.y + extent.y)};
+    mSceneScissor.offset = {pos.x, pos.y};
 
     pSceneObject = mRootObject.createChild<nodes::SceneObject<nodes::Node2D>>("Scene");
 }
@@ -81,12 +81,12 @@ void ke::SceneManager::recreateViewport(glm::ivec2 pos, glm::ivec2 extent, int w
     mSceneViewport.height = extent.y;
     mSceneViewport.width = extent.x;
     mSceneViewport.x = pos.x;
-    mSceneViewport.y = windowHeight - (pos.y + extent.y);
+    mSceneViewport.y = pos.y;
     mSceneViewport.minDepth = 0.0f;
     mSceneViewport.maxDepth = 1.0f;
 
     mSceneScissor.extent = {static_cast<uint32_t>(extent.x), static_cast<uint32_t>(extent.y)};
-    mSceneScissor.offset = {pos.x, windowHeight - (pos.y + extent.y)};   
+    mSceneScissor.offset = {pos.x, pos.y};   
 }
 
 void ke::SceneManager::terminate()

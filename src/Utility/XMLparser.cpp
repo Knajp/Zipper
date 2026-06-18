@@ -1,10 +1,15 @@
 #include "XMLparser.hpp"
 #include "RenderUtil.hpp"
 #include "structs.hpp"
+#include "../Graphics/Renderer.hpp"
+
 #include <vector>
 
 void ke::util::XML::parseFile(std::string filepath, std::vector<std::unique_ptr<gui::Element>>& elements)
 {
+    ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
+    glm::ivec2 dims = rend.getSwapchainDimensions();
+
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(filepath.c_str());
 
@@ -12,23 +17,27 @@ void ke::util::XML::parseFile(std::string filepath, std::vector<std::unique_ptr<
 
     pugi::xml_node root = doc.child("KEUIcomponent");
     
-    float rootx = root.attribute("x").as_float() / 100.0f;
-    float rooty = root.attribute("y").as_float() / 100.0f;
-    float rootw = root.attribute("w").as_float() / 100.0f;
-    float rooth = root.attribute("h").as_float() / 100.0f;
+    ke::gui::XMLValue rootX(root.attribute("x").as_string());
+    ke::gui::XMLValue rootY(root.attribute("y").as_string());
+    ke::gui::XMLValue rootW(root.attribute("w").as_string());
+    ke::gui::XMLValue rootH(root.attribute("h").as_string());
+
+    int rootx = rootX.toPixels(dims.x);
+    int rooty = rootY.toPixels(dims.y);
+    int rootw = rootW.toPixels(dims.x);
+    int rooth = rootH.toPixels(dims.y);
 
     for(pugi::xml_node frame : root.children("Frame"))
     {  
-        float x = frame.attribute("x").as_float() / 100.0f;
-        float y = frame.attribute("y").as_float() / 100.0f;
-        float w = frame.attribute("w").as_float() / 100.0f;
-        float h = frame.attribute("h").as_float() / 100.0f;
+        ke::gui::XMLValue X(frame.attribute("x").as_string());
+        ke::gui::XMLValue Y(frame.attribute("y").as_string());
+        ke::gui::XMLValue W(frame.attribute("w").as_string());
+        ke::gui::XMLValue H(frame.attribute("h").as_string());
 
-        x = rootx + rootw * x;
-        y = rooty + rooth * y;
-        w *= rootw;
-        h *= rooth;
-
+        float x = rootx + X.toPixels(rootw);
+        float y = rooty + Y.toPixels(rooth);
+        float w = W.toPixels(rootw);
+        float h = H.toPixels(rooth);
 
         const char* hexColor = frame.attribute("color").as_string();
         int r, g, b;
@@ -43,15 +52,15 @@ void ke::util::XML::parseFile(std::string filepath, std::vector<std::unique_ptr<
     for(pugi::xml_node button : root.children("Button"))
     {
 
-        float x = button.attribute("x").as_float() / 100.0f;
-        float y = button.attribute("y").as_float() / 100.0f;
-        float w = button.attribute("w").as_float() / 100.0f;
-        float h = button.attribute("h").as_float() / 100.0f;
+        ke::gui::XMLValue X(button.attribute("x").as_string());
+        ke::gui::XMLValue Y(button.attribute("y").as_string());
+        ke::gui::XMLValue W(button.attribute("w").as_string());
+        ke::gui::XMLValue H(button.attribute("h").as_string());
 
-        x = rootx + rootw * x;
-        y = rooty + rooth * y;
-        w *= rootw;
-        h *= rooth;
+        float x = rootx + X.toPixels(rootw);
+        float y = rooty + Y.toPixels(rooth);
+        float w = W.toPixels(rootw);
+        float h = H.toPixels(rooth);
 
         const char* hexColor = button.attribute("color").as_string();
         int r, g, b;
@@ -67,15 +76,15 @@ void ke::util::XML::parseFile(std::string filepath, std::vector<std::unique_ptr<
     }
     for(pugi::xml_node inputField : root.children("input"))
     {
-        float x = inputField.attribute("x").as_float() / 100.0f;
-        float y = inputField.attribute("y").as_float() / 100.0f;
-        float w = inputField.attribute("w").as_float() / 100.0f;
-        float h = inputField.attribute("h").as_float() / 100.0f;
+        ke::gui::XMLValue X(inputField.attribute("x").as_string());
+        ke::gui::XMLValue Y(inputField.attribute("y").as_string());
+        ke::gui::XMLValue W(inputField.attribute("w").as_string());
+        ke::gui::XMLValue H(inputField.attribute("h").as_string());
 
-        x = rootx + rootw * x;
-        y = rooty + rooth * y;
-        w *= rootw;
-        h *= rooth;
+        float x = rootx + X.toPixels(rootw);
+        float y = rooty + Y.toPixels(rooth);
+        float w = W.toPixels(rootw);
+        float h = H.toPixels(rooth);
 
         const char* hexColor = inputField.attribute("color").as_string();
         int r, g, b;
@@ -99,15 +108,15 @@ void ke::util::XML::parseFile(std::string filepath, std::vector<std::unique_ptr<
     }
     for(pugi::xml_node explorer : root.children("Explorer"))
     {
-        float x = explorer.attribute(("x")).as_float() / 100.0f;
-        float y = explorer.attribute(("y")).as_float() / 100.0f;
-        float w = explorer.attribute(("w")).as_float() / 100.0f;
-        float h = explorer.attribute(("h")).as_float() / 100.0f;
+        ke::gui::XMLValue X(explorer.attribute("x").as_string());
+        ke::gui::XMLValue Y(explorer.attribute("y").as_string());
+        ke::gui::XMLValue W(explorer.attribute("w").as_string());
+        ke::gui::XMLValue H(explorer.attribute("h").as_string());
 
-        x = rootx + rootw * x;
-        y = rooty + rooth * y;
-        w *= rootw;
-        h *= rooth;
+        float x = rootx + X.toPixels(rootw);
+        float y = rooty + Y.toPixels(rooth);
+        float w = W.toPixels(rootw);
+        float h = H.toPixels(rooth);
 
         const char* hexColor = explorer.attribute("color").as_string();
         int r, g, b;
@@ -123,35 +132,38 @@ void ke::util::XML::parseFile(std::string filepath, std::vector<std::unique_ptr<
 
 void ke::util::XML::parseSceneFile(std::string filepath, glm::ivec2 &offset, glm::ivec2 &extent, int wx, int wy)
 {
+    ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
+    glm::ivec2 dims = rend.getSwapchainDimensions();
+
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(filepath.c_str());
 
     pugi::xml_node root = doc.child("KEUIcomponent");
 
-    float rootx = root.attribute("x").as_float() / 100.0f;
-    float rooty = root.attribute("y").as_float() / 100.0f;
-    float rootw = root.attribute("w").as_float() / 100.0f;
-    float rooth = root.attribute("h").as_float() / 100.0f;
+    ke::gui::XMLValue rootX(root.attribute("x").as_string());
+    ke::gui::XMLValue rootY(root.attribute("y").as_string());
+    ke::gui::XMLValue rootW(root.attribute("w").as_string());
+    ke::gui::XMLValue rootH(root.attribute("h").as_string());
+
+    int rootx = rootX.toPixels(dims.x);
+    int rooty = rootY.toPixels(dims.y);
+    int rootw = rootW.toPixels(dims.x);
+    int rooth = rootH.toPixels(dims.y);
 
     for(pugi::xml_node scene: root.children("SceneView"))
     {
-        float x = scene.attribute("x").as_float() / 100.0f;
-        float y = scene.attribute("y").as_float() / 100.0f;
-        float w = scene.attribute("w").as_float() / 100.0f;
-        float h = scene.attribute("h").as_float() / 100.0f;
+        ke::gui::XMLValue X(scene.attribute("x").as_string());
+        ke::gui::XMLValue Y(scene.attribute("y").as_string());
+        ke::gui::XMLValue W(scene.attribute("w").as_string());
+        ke::gui::XMLValue H(scene.attribute("h").as_string());
 
-        x = rootx + rootw * x;
-        y = rooty + rooth * y;
-        w *= rootw;
-        h *= rooth;
-
-        int rx = static_cast<int>(std::round(wx * x));
-        int ry = static_cast<int>(std::round(wy * y));
-        int rw = static_cast<int>(std::round(wx * w));
-        int rh = static_cast<int>(std::round(wy * h));  
-        
-        offset = {rx, ry};
-        extent = {rw, rh};
+        float x = rootx + X.toPixels(rootw);
+        float y = rooty + Y.toPixels(rooth);
+        float w = W.toPixels(rootw);
+        float h = H.toPixels(rooth); 
+                
+        offset = {x, y};
+        extent = {w, h};
     }
 }
 
@@ -164,12 +176,13 @@ void ke::gui::Explorer::updateExplorerEntries()
 {
     SceneManager& sceneManager = SceneManager::getInstance();
     const nodes::RootObject* rootObject = sceneManager.getRootObject();
-    if(rootObject == nullptr || !rootObject) return;
+    if(!rootObject) return;
 
     auto elements = rootObject->gatherDescendants();
 
     for(nodes::DefaultObject* el : elements)
     {
+        std::cout << "Element found\n";
         mEntries.insert(std::make_pair<uint8_t, ExpEntry>(el->getObjectID(), ExpEntry(el->name, el->getDepth())));
         mVisibleEntries.push_back(el->getObjectID());
     }
@@ -182,23 +195,34 @@ void ke::gui::Explorer::reconstructExplorerVertices()
     mVertexBuffer.destroy();
     mIndexBuffer.destroy();
 
-    float descend = 0.1f;
-    float inset = 0.2f;
+    mVertices.push_back({{0,y}, color, {0.0f, 0.0f}});
+    mVertices.push_back({{0 + w, y}, color, {1.0f, 0.0f}});
+    mVertices.push_back({{0, y + h}, color , {0.0f, 1.0f}});
+    mVertices.push_back({{0 + w, y + h}, color, {1.0f, 1.0f}});
+
+    mIndices = {
+        0,1,2,
+        2,3,1
+    };
+
+    uint8_t descend = 42;
+    uint8_t inset = 20;
 
     uint64_t i = 0;
-    uint32_t indexOffset = 0;
+    uint32_t indexOffset = 4;
     for(uint64_t entryID : mVisibleEntries)
     {
+        std::cout << "visible entry\n";
         ExpEntry& entry = mEntries.at(entryID);
         std::vector<util::str::Vertex2P3C2T> entryVertices{};
 
         float entryInset = entry.depth * inset;
         float entryDescend = i * descend;
 
-        entryVertices.push_back(util::str::Vertex2P3C2T{{x, y}, color, {0.0f, 0.0f}});
-        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset, y}, color, {0.0f, 0.0f}});
-        entryVertices.push_back(util::str::Vertex2P3C2T{{x, y + entryDescend}, color, {0.0f, 0.0f}});
-        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset, y + entryDescend}, color, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset, h - (y + entryDescend)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset + w, h - (y + entryDescend)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset, h - (y + entryDescend + 40)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset + w, h - (y + entryDescend + 40)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
 
         std::vector<uint32_t> entryIndices = 
         {
@@ -213,9 +237,19 @@ void ke::gui::Explorer::reconstructExplorerVertices()
         i++;
     }
 
+    mViewport.height = h;
+    mViewport.width = w;
+    mViewport.x = x;
+    mViewport.y = y;
+    mViewport.minDepth = 0.0f;
+    mViewport.maxDepth = 1.0f;
+
+    mScissor.extent = {static_cast<uint32_t>(w),static_cast<uint32_t>(h)};
+    mScissor.offset = {static_cast<int32_t>(x), static_cast<int32_t>(y)};
+    
     Graphics::Renderer& rend = Graphics::Renderer::getInstance();
-    //rend.createVertexBuffer<util::str::Vertex2P3C2T>(mVertices, mVertexBuffer.buffer, mVertexBuffer.bufferMemory);
-    //rend.createIndexBuffer(mIndices, mIndexBuffer.buffer, mIndexBuffer.bufferMemory);
+    rend.createVertexBuffer<util::str::Vertex2P3C2T>(mVertices, mVertexBuffer.buffer, mVertexBuffer.bufferMemory);
+    rend.createIndexBuffer(mIndices, mIndexBuffer.buffer, mIndexBuffer.bufferMemory);
     
 }
 
@@ -223,5 +257,8 @@ void ke::gui::Explorer::DrawGeometry() const
 {
     ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
 
+    vkCmdSetViewport(rend.getCurrentCommandBuffer(), 0, 1, &mViewport);
+    vkCmdSetScissor(rend.getCurrentCommandBuffer(), 0, 1, &mScissor);
+    
     rend.drawBuffersIndexed(mVertexBuffer, mIndexBuffer, static_cast<uint32_t>(mIndices.size()));
 }

@@ -8,6 +8,19 @@ std::unordered_map<std::string, std::function<void()>> ke::gui::Component::mHand
 {
     
 };
+
+void ke::gui::UImanager::updateExplorer() const
+{
+    for(auto& comp : mComponents)
+    {
+        if(pExplorer) break;
+        pExplorer = comp->getExplorer();
+    }
+    if(!pExplorer) return;
+
+    pExplorer->Update();
+}
+
 ke::gui::Component::Component(std::string filepath)
     : mIndexBuffer(Graphics::Renderer::getInstance().getDevice()), mVertexBuffer(Graphics::Renderer::getInstance().getDevice())
 {
@@ -18,21 +31,13 @@ ke::gui::Component::Component(std::string filepath)
     int indexAdvance = 0;
     for(const auto& obj : mFrames)
     {
-        float x = obj->x;
-        x *= 2.0f;
-        x -= 1.0f;
-        float y = obj->y;
-        y *= 2.0f;
-        y -= 1.0f;
-        float w = obj->w;
-        w *= 2.0f;
-        float h = obj->h;
-        h *= 2.0f;
+        if(obj->getType() == gui::Explorer::getStaticType()) 
+            {pExplorerElement = dynamic_cast<gui::Explorer*>(obj.get()); continue;}
 
-        mVertices.push_back({{x, y + h}, {obj->color.r, obj->color.g, obj->color.b}, {0.0f, 0.0f}});
-        mVertices.push_back({{x, y}, {obj->color.r, obj->color.g, obj->color.b}, {0.0f, 0.0f}});
-        mVertices.push_back({{x + w, y}, {obj->color.r, obj->color.g, obj->color.b}, {0.0f, 0.0f}});
-        mVertices.push_back({{x + w, y + h}, {obj->color.r, obj->color.g, obj->color.b}, {0.0f, 0.0f}});
+        mVertices.push_back({{obj->x, obj->y + obj->h}, {obj->color.r, obj->color.g, obj->color.b}, {0.0f, 0.0f}});
+        mVertices.push_back({{obj->x, obj->y}, {obj->color.r, obj->color.g, obj->color.b}, {0.0f, 0.0f}});
+        mVertices.push_back({{obj->x + obj->w, obj->y}, {obj->color.r, obj->color.g, obj->color.b}, {0.0f, 0.0f}});
+        mVertices.push_back({{obj->x + obj->w, obj->y + obj->h}, {obj->color.r, obj->color.g, obj->color.b}, {0.0f, 0.0f}});
 
         mIndices.push_back(0 + indexAdvance);
         mIndices.push_back(1 + indexAdvance);
@@ -46,19 +51,12 @@ ke::gui::Component::Component(std::string filepath)
         if(obj->getType() == gui::InputField::getStaticType())
         {
             gui::InputField* field = dynamic_cast<gui::InputField*>(obj.get());
-
-            int pixelX, pixelY, pixelH;
             
             ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
             glm::ivec2 dimensions = rend.getSwapchainDimensions();
 
-            pixelX = obj->x * dimensions.x + 5;
-            pixelH = obj->h * dimensions.y;
-            pixelY = obj->y * dimensions.y + pixelH * 0.3;
-
-
             InputValue value = field->getValue();
-            ke::Graphics::Text::TextInstance textInstance = ke::Graphics::Text::TextInstance(value.val, "DejaVuSans", pixelX, pixelY, glm::vec4(value.color.r, value.color.g, value.color.b, 1.0f), pixelH);
+            ke::Graphics::Text::TextInstance textInstance = ke::Graphics::Text::TextInstance(value.val, "DejaVuSans", obj->x, obj->y, glm::vec4(value.color.r, value.color.g, value.color.b, 1.0f), obj->h);
 
             field->setTextInstance(textInstance);
 
@@ -163,9 +161,6 @@ void ke::gui::Component::Draw(VkCommandBuffer commandBuffer)
     vkCmdBindIndexBuffer(commandBuffer, mIndexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
 
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(mIndices.size()), 1, 0, 0, 0);
-
-    if(pExplorerElement)
-        pExplorerElement->DrawGeometry();
 }
 
 void ke::gui::Component::DrawText()
@@ -218,6 +213,7 @@ void ke::gui::UImanager::drawComponents(VkCommandBuffer commandBuffer)
     {
         comp->Draw(commandBuffer);
     }
+    pExplorer->DrawGeometry();
 }
 
 void ke::gui::UImanager::drawComponentTextLabels()
