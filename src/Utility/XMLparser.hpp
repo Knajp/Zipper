@@ -144,6 +144,8 @@ namespace ke
 
             VkViewport mViewport;
             VkRect2D mScissor;
+
+            glm::mat4 mProjection;
         };
 
         enum InputType

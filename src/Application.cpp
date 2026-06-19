@@ -67,7 +67,7 @@ void ke::Core::Application::run()
 
     nodes::ISceneObject* pSceneObject = mSceneManager.getSceneObject();
     nodes::Rect2D* rect = pSceneObject->createChild<nodes::Rect2D>(0,0,500,500, "Hello!");
-    nodes::Circle* circle = pSceneObject->createChild<nodes::Circle>(100, 700, 700, "Circlebig");
+    nodes::Circle* circle = pSceneObject->createChild<nodes::Circle>(200, 700, 600, "Circlebig");
 
     mUIManager.updateExplorer();
 

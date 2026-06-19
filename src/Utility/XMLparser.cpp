@@ -219,10 +219,10 @@ void ke::gui::Explorer::reconstructExplorerVertices()
         float entryInset = entry.depth * inset;
         float entryDescend = i * descend;
 
-        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset, h - (y + entryDescend)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
-        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset + w, h - (y + entryDescend)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
-        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset, h - (y + entryDescend + 40)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
-        entryVertices.push_back(util::str::Vertex2P3C2T{{x + entryInset + w, h - (y + entryDescend + 40)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset, h - (y + entryDescend)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset + w, h - (y + entryDescend)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset, h - (y + entryDescend + 40)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset + w, h - (y + entryDescend + 40)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
 
         std::vector<uint32_t> entryIndices = 
         {
@@ -246,7 +246,9 @@ void ke::gui::Explorer::reconstructExplorerVertices()
 
     mScissor.extent = {static_cast<uint32_t>(w),static_cast<uint32_t>(h)};
     mScissor.offset = {static_cast<int32_t>(x), static_cast<int32_t>(y)};
-    
+ 
+    mProjection = glm::ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
+
     Graphics::Renderer& rend = Graphics::Renderer::getInstance();
     rend.createVertexBuffer<util::str::Vertex2P3C2T>(mVertices, mVertexBuffer.buffer, mVertexBuffer.bufferMemory);
     rend.createIndexBuffer(mIndices, mIndexBuffer.buffer, mIndexBuffer.bufferMemory);
@@ -257,6 +259,8 @@ void ke::gui::Explorer::DrawGeometry() const
 {
     ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
 
+    rend.pickTextureIndexAndProjection(-1, mProjection);
+    
     vkCmdSetViewport(rend.getCurrentCommandBuffer(), 0, 1, &mViewport);
     vkCmdSetScissor(rend.getCurrentCommandBuffer(), 0, 1, &mScissor);
     

@@ -125,7 +125,12 @@ namespace ke
             Image& operator=(const Image& other) = delete;
         };
         
- 
+        struct UIPushConstants
+        {
+            alignas(4) int32_t textureID;
+            alignas(16) glm::mat4 projectionMatrix;
+        };
+        
         struct Buffer
         {
             VkBuffer buffer = VK_NULL_HANDLE;

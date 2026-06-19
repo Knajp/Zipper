@@ -1,5 +1,6 @@
 #!/bin/bash
 
+rm -rf ./shader/bin
 mkdir ./shader/bin
 $VULKANSDK/x86_64/bin/glslc shader/shader.vert -o shader/bin/vert.spv
 $VULKANSDK/x86_64/bin/glslc shader/shader.frag -o shader/bin/frag.spv

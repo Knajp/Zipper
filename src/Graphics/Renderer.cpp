@@ -173,7 +173,8 @@ void ke::Graphics::Renderer::updateUIUniforms(float aspectRatio)
 {
     util::UniformBufferObject ubo{};
     ubo.model = glm::mat4(1.0f);
-    ubo.proj = glm::ortho(0.0f, static_cast<float>(mSwapchainExtent.width), static_cast<float>(mSwapchainExtent.height), 0.0f, -1.0f, 1.0f);
+    ubo.proj = glm::mat4(1.0f);
+    mUiProjectionMatrix = glm::ortho(0.0f, static_cast<float>(mSwapchainExtent.width), static_cast<float>(mSwapchainExtent.height), 0.0f, -1.0f, 1.0f);
     ubo.view = glm::mat4(1.0f);
     
     
@@ -182,16 +183,12 @@ void ke::Graphics::Renderer::updateUIUniforms(float aspectRatio)
 
 void ke::Graphics::Renderer::updateSceneUniforms(float aspectRatio)
 {
-    //static auto startTime = std::chrono::high_resolution_clock::now();
-
-    //auto currentTime = std::chrono::high_resolution_clock::now();
-    //float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     ke::SceneManager& sman = ke::SceneManager::getInstance();
     util::UniformBufferObject ubo{};
     ubo.model = glm::mat4(1.0f);
     ubo.proj = glm::ortho(0.0f, static_cast<float>(sman.getViewport().width),0.0f, static_cast<float>(sman.getViewport().height),-1.0f, 1.0f);
-    //ubo.view = glm::lookAt(glm::vec3{1.0f, 1.0f, 2.0f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
+    ubo.view = glm::lookAt(glm::vec3{1.0f, 1.0f, 2.0f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
     ubo.view = glm::mat4(1.0f);
 
     memcpy(sceneUniformBuffersMapped[currentFrameInFlight], &ubo, sizeof(ubo));
@@ -925,9 +922,9 @@ void ke::Graphics::Renderer::createGraphicsPipeline()
     VkDescriptorSetLayout dLayouts[] = {mTextureSetLayout, mDescriptorSetLayout};
 
     VkPushConstantRange pushRange{};
-    pushRange.size = sizeof(int32_t);
-    pushRange.offset = 0;
-    pushRange.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    pushRange.size = sizeof(util::UIPushConstants);
+    static_assert(offsetof(util::UIPushConstants, projectionMatrix) == 16);    pushRange.offset = 0;
+    pushRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
     VkPipelineLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -1715,9 +1712,15 @@ void ke::Graphics::Renderer::bindFontPipeline(VkCommandBuffer buffer)
 
 void ke::Graphics::Renderer::pickTextureIndex(int32_t index) const
 {
-    vkCmdPushConstants(mCommandBuffers[currentFrameInFlight], mPipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(int32_t), &index);
+    util::UIPushConstants pc{index, mUiProjectionMatrix};
+    vkCmdPushConstants(mCommandBuffers[currentFrameInFlight], mPipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(util::UIPushConstants), &pc);
 }
 
+void ke::Graphics::Renderer::pickTextureIndexAndProjection(int32_t index, glm::mat4 proj) const
+{
+    util::UIPushConstants pc{index, proj};
+    vkCmdPushConstants(mCommandBuffers[currentFrameInFlight], mPipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(util::UIPushConstants), &pc);
+}
 void ke::Graphics::Renderer::pickFontIndex(int32_t index) const
 {
     vkCmdPushConstants(mCommandBuffers[currentFrameInFlight], mFontPipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(int32_t), &index);

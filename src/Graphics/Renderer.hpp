@@ -85,7 +85,10 @@ namespace ke
             void bindFontPipeline(VkCommandBuffer buffer);
 
             void pickTextureIndex(int32_t index) const;
+            void pickTextureIndexAndProjection(int32_t index, glm::mat4 projection) const;
+
             void pickFontIndex(int32_t index) const;
+            
             void drawBuffersIndexed(const util::Buffer& vertexBuffer, const util::Buffer& indexBuffer, uint32_t indexCount) const;
             void drawText(const util::Buffer& instanceBuffer, uint32_t instanceCount) const;
             
@@ -230,6 +233,9 @@ namespace ke
             bool  USE_BINDLESS_TXT = false;
             uint32_t MAX_TEXTURES = 0;
             uint32_t mMipLevels;
+
+            glm::mat4 mUiProjectionMatrix;
+
             //DEBUG
             VkDebugUtilsMessengerEXT mDebugMessenger;
 
