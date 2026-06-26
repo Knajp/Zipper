@@ -198,11 +198,10 @@ void ke::gui::Explorer::reconstructExplorerVertices()
     mVertexBuffer.destroy();
     mIndexBuffer.destroy();
 
-    int correction = 0;
-    mVertices.push_back({{0,y + correction}, color, {0.0f, 0.0f}});
-    mVertices.push_back({{0 + w, y + correction}, color, {1.0f, 0.0f}});
-    mVertices.push_back({{0, y + h + correction}, color , {0.0f, 1.0f}});
-    mVertices.push_back({{0 + w, y + h + correction}, color, {1.0f, 1.0f}});
+    mVertices.push_back({{0, 0}, color, {0.0f, 0.0f}});
+    mVertices.push_back({{w, 0}, color, {1.0f, 0.0f}});
+    mVertices.push_back({{0, h}, color, {0.0f, 1.0f}});
+    mVertices.push_back({{w, h}, color, {1.0f, 1.0f}});
 
     mIndices = {
         0,1,2,
@@ -243,12 +242,12 @@ void ke::gui::Explorer::reconstructExplorerVertices()
     mViewport.height = h;
     mViewport.width = w;
     mViewport.x = x;
-    mViewport.y = dims.y - h;
+    mViewport.y = dims.y - y - h;
     mViewport.minDepth = 0.0f;
     mViewport.maxDepth = 1.0f;
 
     mScissor.extent = {static_cast<uint32_t>(w),static_cast<uint32_t>(h)};
-    mScissor.offset = {static_cast<int32_t>(x), static_cast<int32_t>(y)};
+    mScissor.offset = {static_cast<int32_t>(x), static_cast<int32_t>(dims.y - y - h)};
  
     mProjection = glm::ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
 
