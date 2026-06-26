@@ -2,5 +2,9 @@
 
 <KEUIcomponent name="explorer" x="80%" y="0%" w="20%" h="97%">
     <Frame x="0%" y="0%" w="100%" h="100%" color="#314f55"></Frame>
+<<<<<<< HEAD
     <Explorer x="1%" y="1%" w="98%" h="98%" color="#303c54"></Explorer>
+=======
+    <Explorer x="1%" y="0%" w="98%" h="100%" color="#23383d"></Explorer>
+>>>>>>> 54e1b2d822d733f8b39124e8022c01711a530998
 </KEUIcomponent>
