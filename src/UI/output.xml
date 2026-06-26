@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <KEUIcomponent name="output" x="0%" y="0%" w="80%" h="20%">
-    <Frame x="0%" y="0%" w="100%" h="100%" color="#314f55"></Frame>
-    <input x="50%" y="80%" w="20%" h="15%" color="#294247" type="text" placeholder=".obj File name here: " name="objfile"></input>
-    <Button x="72%" y="80%" w="10%" h="15%" color="#ffffff" id="submitinput"></Button>
+    <Frame x="0%" y="0%" w="100%" h="100%" color="#303C54"></Frame>
+    <input x="50%" y="80%" w="20%" h="15%" color="#617AAB" type="text" placeholder=".obj File name here: " name="objfile"></input>
+    <Button x="72%" y="80%" w="10%" h="15%" color="#90B4FC" id="submitinput"></Button>
 </KEUIcomponent> 

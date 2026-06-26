@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <KEUIcomponent name="navbar" x="0%" y="97%" w="100%" h="3%">
-    <Frame x="0%" y="0%" w="100%" h="100%" color="#152e33">
+    <Frame x="0%" y="0%" w="100%" h="100%" color="#192B54">
        
     </Frame>
 </KEUIcomponent>
