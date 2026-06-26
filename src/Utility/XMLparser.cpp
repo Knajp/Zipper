@@ -190,15 +190,19 @@ void ke::gui::Explorer::updateExplorerEntries()
 
 void ke::gui::Explorer::reconstructExplorerVertices()
 {
+    ke::Graphics::Renderer& rend = ke::Graphics::Renderer::getInstance();
+    glm::ivec2 dims = rend.getSwapchainDimensions();
+
     mVertices.clear();
     mIndices.clear();
     mVertexBuffer.destroy();
     mIndexBuffer.destroy();
 
-    mVertices.push_back({{0,y}, color, {0.0f, 0.0f}});
-    mVertices.push_back({{0 + w, y}, color, {1.0f, 0.0f}});
-    mVertices.push_back({{0, y + h}, color , {0.0f, 1.0f}});
-    mVertices.push_back({{0 + w, y + h}, color, {1.0f, 1.0f}});
+    int correction = 0;
+    mVertices.push_back({{0,y + correction}, color, {0.0f, 0.0f}});
+    mVertices.push_back({{0 + w, y + correction}, color, {1.0f, 0.0f}});
+    mVertices.push_back({{0, y + h + correction}, color , {0.0f, 1.0f}});
+    mVertices.push_back({{0 + w, y + h + correction}, color, {1.0f, 1.0f}});
 
     mIndices = {
         0,1,2,
@@ -212,7 +216,6 @@ void ke::gui::Explorer::reconstructExplorerVertices()
     uint32_t indexOffset = 4;
     for(uint64_t entryID : mVisibleEntries)
     {
-        std::cout << "visible entry\n";
         ExpEntry& entry = mEntries.at(entryID);
         std::vector<util::str::Vertex2P3C2T> entryVertices{};
 
@@ -240,7 +243,7 @@ void ke::gui::Explorer::reconstructExplorerVertices()
     mViewport.height = h;
     mViewport.width = w;
     mViewport.x = x;
-    mViewport.y = y;
+    mViewport.y = dims.y - h;
     mViewport.minDepth = 0.0f;
     mViewport.maxDepth = 1.0f;
 
@@ -249,7 +252,6 @@ void ke::gui::Explorer::reconstructExplorerVertices()
  
     mProjection = glm::ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
 
-    Graphics::Renderer& rend = Graphics::Renderer::getInstance();
     rend.createVertexBuffer<util::str::Vertex2P3C2T>(mVertices, mVertexBuffer.buffer, mVertexBuffer.bufferMemory);
     rend.createIndexBuffer(mIndices, mIndexBuffer.buffer, mIndexBuffer.bufferMemory);
     
