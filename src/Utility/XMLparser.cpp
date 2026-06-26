@@ -219,10 +219,10 @@ void ke::gui::Explorer::reconstructExplorerVertices()
         float entryInset = entry.depth * inset;
         float entryDescend = i * descend;
 
-        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset, h - (y + entryDescend)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
-        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset + w, h - (y + entryDescend)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
-        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset, h - (y + entryDescend + 40)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
-        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset + w, h - (y + entryDescend + 40)}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset, h - (y + entryDescend)}, {0.255f, 0.306f, 0.412f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset + w, h - (y + entryDescend)}, {0.255f, 0.306f, 0.412f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset, h - (y + entryDescend + 40)}, {0.255f, 0.306f, 0.412f}, {0.0f, 0.0f}});
+        entryVertices.push_back(util::str::Vertex2P3C2T{{0 + entryInset + w, h - (y + entryDescend + 40)}, {0.255f, 0.306f, 0.412f}, {0.0f, 0.0f}});
 
         std::vector<uint32_t> entryIndices = 
         {
